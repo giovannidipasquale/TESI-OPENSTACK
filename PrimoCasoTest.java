@@ -1,24 +1,54 @@
+import java.io.IOException;
 import org.openstack4j.api.*;
+import org.openstack4j.model.compute.Server;
+import org.openstack4j.model.compute.ServerCreate;
 import org.openstack4j.openstack.*;
 
 //TEMPO DI CREAZIONE DI UNA MACCHINA VIRTUALE
 public class PrimoCasoTest 
-{		
-	public static void main(String[] args)
+{
+	//CREA SERVER
+	public static void CreazioneServer(OSClient os) throws NumberFormatException, IOException, InterruptedException 
+	{
+		System.out.print("\nnome del server: MioServer\n" );
+		
+		ServerCreate sc = Builders.server()
+	            .name("MioServer")
+	            .flavor("42")
+	            .image("245f3fdc-455d-4e1c-af5f-0fd388bb6da9")
+	            .build();
+
+	    Server server = os.compute().servers().boot(sc);
+
+	    String id = server.getId();
+	    System.out.println("\nIl server è stato creato con id = " + id);
+	    
+	    //CONTROLLA FINO A QUANDO IL SERVER CREATO DIVENTA ATTIVO
+		while(true)
+		{
+			if(os.compute().servers().get(id).getStatus().toString()=="ACTIVE")
+				break;
+		}
+
+		System.out.println("lo stato del server è: \n" + os.compute().servers().get(id).getStatus().toString());
+	}
+		
+	public static void main(String[] args) throws NumberFormatException, IOException, InterruptedException 
 	{
 		//FILE CONFIGURAZIONE
 		ConfigurationProperties props = new ConfigurationProperties();
 		
+
 		OSFactory.enableLegacyEndpointHandling(true);
 		
 		//AUTENTICAZIONE
-		String Username = props.getProperty("Username");
-		String Password = props.getProperty("Password");
-		String tenantName = props.getProperty("tenantName");
+		String Username = props.getString("Username");
+		String Password = props.getString("Password");
+		String tenantName = props.getString("tenantName");
 		
 		Autenticazione login = new Autenticazione(Username, Password, tenantName);
 		OSClient os = OSFactory.builder()
-				.endpoint(login.authURL())
+				.endpoint(login.authURL("/v2.0"))
 	            .credentials(login.getUsername(), login.getPassword())
 	            .tenantName(login.getTenant())
 	            .authenticate();
@@ -26,8 +56,7 @@ public class PrimoCasoTest
 		double startTime = System.currentTimeMillis();
 		
 		//CREAZIONE SERVER
-		GestioneServer gs = new GestioneServer();
-		gs.CreazioneServer(os, props.getProperty("nomeServer"), props.getProperty("FlavorId"), props.getProperty("imageId"));
+		CreazioneServer(os);
 		
 		//TEMPO ESECUZIONE
 		double endtime = System.currentTimeMillis();
