@@ -18,7 +18,7 @@ public class GestioneFile
 		
 	}
 	
-	//VEDERE MEGLIO IL FUNZIONAMENTO
+	//DA CONTROLLARE
 	//LISTING DEI CONTAINERS
 	public void ListaContainer(OSClient os)
 	{
