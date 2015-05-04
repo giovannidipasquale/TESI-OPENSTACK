@@ -2,24 +2,26 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+
  
 public class ConfigurationProperties 
 {
       //FILE PROPERTIES
-	  //PATH GIOVANNI: "/home/giovannidipasquale/git/Autenticazione Openstack/config.properties"
-	  //PATH GIUSEPPE: "/home/giupino/gitRep/Autenticazione openstack/src/config.properties"
-      private static String fileProperties="/home/giovannidipasquale/git/Autenticazione Openstack/config.properties";
-      
-      public ConfigurationProperties() {}
+      private static String fileProperties="/home/giovannidipasquale/git/Giugio/Autenticazione openstack/src/config.properties";
+      public ConfigurationProperties()
+      {
+        
+      }
       
       //RECUPERA LA PROPERTY RICHIESTA
-      public String getProperty(String pKey) 
+      public String getString(String pKey) 
       {
           String myReturn="";
           Properties props = new Properties();
           try
           {
               props.load(new FileInputStream(fileProperties));
+              //LEGGO IL VALORE DI RITORNO
               myReturn = props.getProperty(pKey);
           }
           catch(IOException e) 
@@ -29,7 +31,7 @@ public class ConfigurationProperties
           return myReturn ;
       }
       
-     //PERMETTE DI SCRIVERE UN VALORE NEL FILE CONFIG.PROPERTIES
+     //QUESTO METODO PERMETTE DI SCRIVERE UN VALORE NEL FILE CONFIG.PROPERTIES
       public void setProperty(String pKey, String pValue)  
       {
           Properties properties = new Properties();
