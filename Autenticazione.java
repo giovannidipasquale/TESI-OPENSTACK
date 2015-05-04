@@ -1,52 +1,84 @@
+import java.net.InetAddress;
+
 public class Autenticazione 
 {
 	private String username;
 	private String password;
 	private String tenant;
+	private String host;
 	
-	public Autenticazione() {}
+	public Autenticazione() {
+		
+	}
 	
-	public Autenticazione(String username, String password, String tenant) 
-	{
+	public Autenticazione(String username, String password, String tenant) {
 		this.username = username;
 		this.password = password;
 		this.tenant = tenant;
 	}
 	
-	public String getUsername() 
-	{
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
 		return username;
 	}
 	
-	public void setUsername(String username) 
-	{
+	/**
+	 * @param username la username da impostare
+	 */
+	public void setUsername(String username) {
 		this.username = username;
 	}
 	
-	public String getPassword() 
-	{
+	/**
+	 * @return la password
+	 */
+	public String getPassword() {
 		return password;
 	}
 	
-	public void setPassword(String password) 
-	{
+	/**
+	 * @param password la password da impostare
+	 */
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	
-	public String getTenant() 
-	{
+	/**
+	 * @return il tenant
+	 */
+	public String getTenant() {
 		return tenant;
 	}
 	
-	public void setTenant(String tenant) 
-	{
+	/**
+	 * @param tenant il tenant da impostare
+	 */
+	public void setTenant(String tenant) {
 		this.tenant = tenant;
 	}
 	
-	public String authURL() 
-	{ 
-	    ConfigurationProperties props = new ConfigurationProperties();
-	    String ipServer = props.getProperty("ipServer");
-	    return String.format("http://%s:5000%s", ipServer, "/v2.0");
+	public String authURL(String path) 
+	{
+	    return String.format("http://%s:5000%s", getHost(), path);
+	}
+	
+	public String getHost() 
+	{
+	    try
+	    {
+	    	host="";
+	        if (host == null)
+	            host = InetAddress.getLocalHost().getHostAddress();
+	    }
+	    catch (Exception e) 
+	    {
+	        e.printStackTrace();
+	    }
+	    if (host == null)
+	        return "127.0.0.1";
+	    
+	    return host;
 	}
 }
